@@ -128,8 +128,96 @@ docker system prune
 
 🏁 Summary
 
+
 Linux Mint + Docker official instructions may fail
 
 Forcing Ubuntu Jammy repo is the most reliable method
 
 This setup is stable for development, Docker Compose, and Kubernetes
+
+-----------------------------------------Fedora KDE 43 GPU commands---------------------------
+Nice! 👍
+Here’s a **clean copy-paste summary of all the important commands**, in order.
+
+---
+
+## 1️⃣ Check NVIDIA driver & GPU
+
+```bash
+nvidia-smi
+```
+
+---
+
+## 2️⃣ Check which GPU is currently used (default)
+
+```bash
+glxinfo | grep "OpenGL renderer"
+```
+
+---
+
+## 3️⃣ Test NVIDIA PRIME offloading (should show GTX 1650)
+
+```bash
+__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia glxinfo | grep "OpenGL renderer"
+```
+
+---
+
+## 4️⃣ Run Steam using NVIDIA GPU
+
+```bash
+__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia steam
+```
+
+---
+
+## 5️⃣ Steam per-game launch option (BEST METHOD)
+
+Paste this into **Steam → Properties → Launch Options**:
+
+```bash
+__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia %command%
+```
+
+---
+
+## 6️⃣ Verify game is using NVIDIA while running
+
+```bash
+nvidia-smi
+```
+
+---
+
+## 7️⃣ Make sure nouveau is NOT loaded
+
+```bash
+lsmod | grep nouveau
+```
+
+(no output = good)
+
+---
+
+## Optional (X11 session check)
+
+```bash
+echo $XDG_SESSION_TYPE
+```
+
+---
+
+### ✅ Expected result
+
+* `glxinfo` default → AMD Radeon
+* Offload command → **NVIDIA GTX 1650**
+* `nvidia-smi` → game listed under Processes
+* FPS improves 🚀
+
+If you want, I can also show how to:
+
+* Make NVIDIA default for **all games**
+* Create a desktop shortcut
+* Optimize Steam + Proton for Fedora KDE
